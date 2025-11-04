@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: inventario-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/inventario_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
+logging:
+  level:
+    com.fullstack.inventario: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+
+app:
+  api:
+    key: secret-key-inventario
+
+productos:
+  service:
+    url: http://localhost:8081
+
+resilience4j:
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 1000
+        retryExceptions:
+          - java.net.ConnectException
+          - org.springframework.web.client.RestClientException
+    instances:
+      productoRetry:
+        baseConfig: default
+  circuitbreaker:
+    configs:
+      default:
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2000
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+    instances:
+      productoCircuitBreaker:
+        baseConfig: default
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+

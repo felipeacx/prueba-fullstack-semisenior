@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  datasource:
+    url: jdbc:h2:mem:test_db
+    driver-class-name: org.h2.Driver
+
+app:
+  api:
+    key: secret-key-inventario
+
+productos:
+  service:
+    url: http://localhost:8081
+

@@ -1,0 +1,87 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+
+  .app-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.8rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+
+      a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &.active {
+          background-color: rgba(255, 255, 255, 0.3);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .app-main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .app-footer {
+    background-color: #333;
+    color: #aaa;
+    text-align: center;
+    padding: 2rem;
+    margin-top: auto;
+    border-top: 1px solid #444;
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    .app-header {
+      h1 {
+        font-size: 1.3rem;
+      }
+
+      nav {
+        gap: 1rem;
+
+        a {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .app-main {
+      padding: 1rem;
+    }
+  }
+}

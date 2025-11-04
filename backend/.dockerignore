@@ -1,0 +1,7 @@
+# Minimal dockerignore - only exclude non-essential items
+.git
+.gitignore
+.idea
+node_modules
+npm-debug.log
+

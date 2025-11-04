@@ -1,0 +1,49 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+*.iml
+.DS_Store
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Gradle
+.gradle/
+build/
+
+# SonarQube
+.sonarqube/
+
+# Application specific
+*.log
+application-prod.yml
+application-dev.yml
+

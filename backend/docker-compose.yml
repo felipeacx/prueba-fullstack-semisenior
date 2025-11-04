@@ -1,0 +1,77 @@
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  productos-service:
+    build:
+      context: ./
+      dockerfile: ./productos-service/Dockerfile
+    container_name: productos-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      APP_API_KEY: secret-key-productos
+      DB_PASSWORD: postgres
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - microservices-network
+    healthcheck:
+      test: [ "CMD", "sh", "-c", "nc -z localhost 8081 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  inventario-service:
+    build:
+      context: ./
+      dockerfile: ./inventario-service/Dockerfile
+    container_name: inventario-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      APP_API_KEY: secret-key-inventario
+      DB_PASSWORD: postgres
+      PRODUCTOS_SERVICE_URL: http://productos-service:8081
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      productos-service:
+        condition: service_healthy
+    networks:
+      - microservices-network
+    healthcheck:
+      test: [ "CMD", "sh", "-c", "nc -z localhost 8082 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+

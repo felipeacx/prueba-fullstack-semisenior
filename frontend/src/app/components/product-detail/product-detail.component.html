@@ -1,0 +1,88 @@
+<div class="product-detail-container" *ngIf="!loading()">
+  <button class="back-btn" (click)="goBack()">
+    &larr; Volver al listado
+  </button>
+
+  <div *ngIf="purchaseSuccess()" class="success-message">
+    <p>¡Compra realizada exitosamente! Redirigiendo...</p>
+  </div>
+
+  <div *ngIf="error() && !purchaseSuccess()" class="error-message">
+    <p>{{ error() }}</p>
+  </div>
+
+  <div *ngIf="product()" class="product-details">
+    <div class="product-info">
+      <h1>{{ product()!.nombre }}</h1>
+      
+      <p class="code">Código: <strong>{{ product()!.codigo }}</strong></p>
+      <p class="category">Categoría: <strong>{{ product()!.categoria }}</strong></p>
+      
+      <p class="description">{{ product()!.descripcion }}</p>
+      
+      <div class="price-section">
+        <span class="label">Precio:</span>
+        <span class="price">${{ product()!.precio | number: '1.0-2' }}</span>
+      </div>
+
+      <div class="inventory-section">
+        <span class="label">Disponible:</span>
+        <span class="inventory" [class.low-stock]="inventory() && inventory()! < 5">
+          {{ inventory() }} unidades
+        </span>
+      </div>
+
+      <div class="purchase-section">
+        <div class="quantity-selector">
+          <label for="quantity">Cantidad:</label>
+          <div class="quantity-controls">
+            <button 
+              (click)="decreaseQuantity()" 
+              [disabled]="quantity() <= 1"
+              class="qty-btn">
+              −
+            </button>
+            <input 
+              type="number" 
+              id="quantity"
+              [ngModel]="quantity()"
+              (ngModelChange)="quantity.set($event)"
+              min="1" 
+              [max]="inventory() || 0"
+              class="qty-input">
+            <button 
+              (click)="increaseQuantity()" 
+              [disabled]="quantity() >= (inventory() || 0)"
+              class="qty-btn">
+              +
+            </button>
+          </div>
+        </div>
+
+        <button 
+          (click)="purchaseProduct()" 
+          [disabled]="purchasing() || !inventory() || inventory() === 0 || quantity() <= 0"
+          class="purchase-btn">
+          {{ purchasing() ? 'Procesando...' : 'Comprar Ahora' }}
+        </button>
+      </div>
+
+      <div class="metadata">
+        <p *ngIf="product()!.createdAt">
+          <small>Creado: {{ product()!.createdAt | date: 'short' }}</small>
+        </p>
+        <p *ngIf="product()!.updatedAt">
+          <small>Actualizado: {{ product()!.updatedAt | date: 'short' }}</small>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!product() && !loading()" class="not-found">
+    <p>Producto no encontrado</p>
+  </div>
+</div>
+
+<div *ngIf="loading()" class="loading">
+  <p>Cargando detalles del producto...</p>
+</div>
